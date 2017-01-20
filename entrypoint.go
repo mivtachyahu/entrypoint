@@ -176,7 +176,7 @@ func getFile(fileName, bucketName, cacheName, keyName string) {
 	localFile := strings.Join([]string{cacheName, keyName}, "")
 	localPath := strings.Join(strings.Split(localFile, "/")[:len(strings.Split(localFile, "/"))-1], "/")
 	createDir(localPath)
-	if _, err := os.Stat(localFile); os.IsNotExist(err) {
+	if _, err := os.Stat(fileName); os.IsNotExist(err) {
 		Trace.Println("File doesn't exist - creating")
 		downloadFile(localFile, bucketName, keyName)
 		copyFile(localFile, fileName)
