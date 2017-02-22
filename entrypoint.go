@@ -171,21 +171,38 @@ func copyFile(src, dst string) (int64, error) {
 	return io.Copy(dstFile, srcFile)
 }
 
+func exists(path string) bool {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
 func getFile(fileName, bucketName, cacheName, keyName string) {
 	Trace.Println("getFile Function")
 	localFile := strings.Join([]string{cacheName, keyName}, "")
 	localPath := strings.Join(strings.Split(localFile, "/")[:len(strings.Split(localFile, "/"))-1], "/")
-	createDir(localPath)
-	if _, err := os.Stat(fileName); os.IsNotExist(err) {
+	if !exists(localPath) {
+		Trace.Println("Cache folder doesn't exist - creating")
+		createDir(localPath)
+	}
+	if !exists(fileName) {
 		Trace.Println("File doesn't exist - creating")
 		downloadFile(localFile, bucketName, keyName)
+		Trace.Println("File Downloaded - Copying to destination")
 		copyFile(localFile, fileName)
 	} else {
 		Trace.Println("File exists - comparing sizes")
 		if *getObjectDetails(bucketName, keyName).ContentLength == getFileSize(fileName) {
 			Trace.Println("Sizes Match - not downloading")
 		} else {
+			Trace.Println("Sizes Do Not Match - Downloading")
 			downloadFile(localFile, bucketName, keyName)
+			Trace.Println("File Downloaded - Copying to destination")
 			copyFile(localFile, fileName)
 		}
 	}
