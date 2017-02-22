@@ -90,6 +90,7 @@ func getBucketRegion(bucketName string) *string {
 }
 
 func getFileSize(fileName string) int64 {
+	Trace.Println("getFileSize Function")
 	file, err := os.Open(fileName)
 	if err != nil {
 		Error.Fatal("Failed to open file", err)
@@ -126,6 +127,7 @@ func getObjectDetails(bucketName, keyName string) *s3.HeadObjectOutput {
 }
 
 func downloadFile(fileName, bucketName, keyName string) {
+	Trace.Println("downloadFile Function")
 	file, err := os.Create(fileName)
 	if err != nil {
 		Error.Fatal("Failed to create file", err)
@@ -148,6 +150,7 @@ func downloadFile(fileName, bucketName, keyName string) {
 }
 
 func copyFile(src, dst string) (int64, error) {
+	Trace.Println("copyFile Function")
 	srcFile, err := os.Open(src)
 	if err != nil {
 		return 0, err
@@ -172,6 +175,7 @@ func copyFile(src, dst string) (int64, error) {
 }
 
 func exists(path string) bool {
+	Trace.Println("exists Function")
 	_, err := os.Stat(path)
 	if err == nil {
 		return true
