@@ -8,6 +8,7 @@ import (
 	"../fs"
 	"../logger"
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/ec2metadata"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
@@ -32,6 +33,15 @@ func getObjectDetails(bucketName, keyName string) *s3.HeadObjectOutput {
 		logger.Error.Fatal(err.Error())
 	}
 	return resp
+}
+
+func getMyRegion() string {
+	logger.Trace.Println("getMyRegion Function")
+	region, err := ec2metadata.New(session.New()).Region()
+	if err != nil {
+		logger.Warning.Printf("Unable to retrieve the region from the EC2 instance %v\n", err)
+	}
+	return region
 }
 
 func getBucketRegion(bucketName string) *string {
@@ -74,6 +84,7 @@ func downloadFile(fileName, bucketName, keyName string) {
 	logger.Info.Println("Downloaded file", fileName, numBytes, "bytes")
 }
 
+// GetFile fileName (destination) bucketName (source Bucket) cacheName (local place to cache files) keyName (source Key in Bucket)
 func GetFile(fileName, bucketName, cacheName, keyName string) {
 	logger.Trace.Println("getFile Function")
 	localFile := strings.Join([]string{cacheName, keyName}, "")

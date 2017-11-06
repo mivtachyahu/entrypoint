@@ -8,6 +8,7 @@ import (
 	"../logger"
 )
 
+// GetFileSize size of file given by fileName
 func GetFileSize(fileName string) int64 {
 	logger.Trace.Println("getFileSize Function")
 	file, err := os.Open(fileName)
@@ -24,7 +25,8 @@ func GetFileSize(fileName string) int64 {
 	return size
 }
 
-func CopyFile(src, dst string) (int64, Error) {
+// CopyFile from src, to dest, returns bytes written and error
+func CopyFile(src, dst string) (int64, error) {
 	logger.Trace.Println("copyFile Function")
 	srcFile, err := os.Open(src)
 	if err != nil {
@@ -49,6 +51,7 @@ func CopyFile(src, dst string) (int64, Error) {
 	return io.Copy(dstFile, srcFile)
 }
 
+// Exists checks path, returns bool true if exists
 func Exists(path string) bool {
 	logger.Trace.Println("exists Function")
 	_, err := os.Stat(path)
@@ -61,6 +64,7 @@ func Exists(path string) bool {
 	return true
 }
 
+// CreateDir creates directory
 func CreateDir(path string) {
 	err := os.MkdirAll(path, 0644)
 	if err != nil {

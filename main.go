@@ -9,9 +9,6 @@ import (
 
 	"./src/bucket"
 	"./src/logger"
-
-	"github.com/aws/aws-sdk-go/aws/ec2metadata"
-	"github.com/aws/aws-sdk-go/aws/session"
 )
 
 func runExec(executable string, args []string) {
@@ -21,15 +18,6 @@ func runExec(executable string, args []string) {
 		logger.Error.Fatal(err)
 	}
 	logger.Info.Println("Executed command", executable, args)
-}
-
-func getMyRegion() string {
-	logger.Trace.Println("getMyRegion Function")
-	region, err := ec2metadata.New(session.New()).Region()
-	if err != nil {
-		logger.Warning.Printf("Unable to retrieve the region from the EC2 instance %v\n", err)
-	}
-	return region
 }
 
 func main() {
